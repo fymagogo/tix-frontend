@@ -1,0 +1,15 @@
+mutation InviteAgent($email: String!, $name: String!, $isAdmin: Boolean) {
+  inviteAgent(email: $email, name: $name, isAdmin: $isAdmin) {
+    agent {
+      id
+      email
+      name
+      isAdmin
+    }
+    errors {
+      field
+      message
+      code
+    }
+  }
+}

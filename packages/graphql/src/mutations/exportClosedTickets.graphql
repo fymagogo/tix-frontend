@@ -1,0 +1,11 @@
+mutation ExportClosedTickets($filter: TicketFilterInput) {
+  exportClosedTickets(filter: $filter) {
+    csv
+    async
+    errors {
+      field
+      message
+      code
+    }
+  }
+}

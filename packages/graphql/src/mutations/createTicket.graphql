@@ -1,0 +1,17 @@
+mutation CreateTicket($subject: String!, $description: String!) {
+  createTicket(subject: $subject, description: $description) {
+    ticket {
+      id
+      ticketNumber
+      subject
+      description
+      status
+      createdAt
+    }
+    errors {
+      field
+      message
+      code
+    }
+  }
+}

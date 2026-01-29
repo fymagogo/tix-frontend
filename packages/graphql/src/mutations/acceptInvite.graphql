@@ -1,0 +1,24 @@
+mutation AcceptInvite(
+  $invitationToken: String!
+  $password: String!
+  $passwordConfirmation: String!
+) {
+  acceptInvite(
+    invitationToken: $invitationToken
+    password: $password
+    passwordConfirmation: $passwordConfirmation
+  ) {
+    agent {
+      id
+      email
+      name
+      isAdmin
+    }
+    token
+    errors {
+      field
+      message
+      code
+    }
+  }
+}

@@ -1,0 +1,77 @@
+query Ticket($id: ID!) {
+  ticket(id: $id) {
+    id
+    ticketNumber
+    subject
+    description
+    status
+    createdAt
+    updatedAt
+    customer {
+      id
+      name
+      email
+    }
+    assignedAgent {
+      id
+      name
+      email
+    }
+    comments {
+      id
+      body
+      createdAt
+      author {
+        ... on Customer {
+          id
+          name
+          email
+        }
+        ... on Agent {
+          id
+          name
+          email
+        }
+      }
+    }
+  }
+}
+
+query TicketByNumber($ticketNumber: String!) {
+  ticketByNumber(ticketNumber: $ticketNumber) {
+    id
+    ticketNumber
+    subject
+    description
+    status
+    createdAt
+    updatedAt
+    customer {
+      id
+      name
+      email
+    }
+    assignedAgent {
+      id
+      name
+      email
+    }
+    comments {
+      id
+      body
+      createdAt
+      author {
+        ... on Customer {
+          id
+          name
+          email
+        }
+        ... on Agent {
+          id
+          name
+          email
+        }
+      }
+    }
+  }
+}

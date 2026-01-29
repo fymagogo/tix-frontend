@@ -1,0 +1,29 @@
+query Tickets($filter: TicketFilterInput, $pagination: PaginationInput, $orderBy: TicketOrderByInput) {
+  tickets(filter: $filter, pagination: $pagination, orderBy: $orderBy) {
+    items {
+      id
+      ticketNumber
+      subject
+      status
+      createdAt
+      updatedAt
+      customer {
+        id
+        name
+        email
+      }
+      assignedAgent {
+        id
+        name
+      }
+    }
+    pageInfo {
+      currentPage
+      totalPages
+      totalCount
+      hasNextPage
+      hasPreviousPage
+      perPage
+    }
+  }
+}

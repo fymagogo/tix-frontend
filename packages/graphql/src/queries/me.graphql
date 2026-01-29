@@ -1,0 +1,17 @@
+query Me {
+  me {
+    ... on Customer {
+      id
+      email
+      name
+      createdAt
+    }
+    ... on Agent {
+      id
+      email
+      name
+      isAdmin
+      createdAt
+    }
+  }
+}

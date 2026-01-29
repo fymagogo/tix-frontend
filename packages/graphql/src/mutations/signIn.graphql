@@ -1,0 +1,23 @@
+mutation SignIn($email: String!, $password: String!, $userType: String!) {
+  signIn(email: $email, password: $password, userType: $userType) {
+    user {
+      ... on Agent {
+        id
+        email
+        name
+        isAdmin
+      }
+      ... on Customer {
+        id
+        email
+        name
+      }
+    }
+    token
+    errors {
+      field
+      message
+      code
+    }
+  }
+}

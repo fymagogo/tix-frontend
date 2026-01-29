@@ -1,0 +1,9 @@
+query Agents {
+  agents {
+    id
+    email
+    name
+    isAdmin
+    createdAt
+  }
+}

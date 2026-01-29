@@ -1,0 +1,14 @@
+mutation TransitionTicket($ticketId: ID!, $event: String!) {
+  transitionTicket(ticketId: $ticketId, event: $event) {
+    ticket {
+      id
+      status
+      updatedAt
+    }
+    errors {
+      field
+      message
+      code
+    }
+  }
+}

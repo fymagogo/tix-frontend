@@ -1,0 +1,16 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom form styles */
+input,
+textarea,
+select {
+  @apply border-gray-300;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  @apply ring-primary-500 border-primary-500;
+}

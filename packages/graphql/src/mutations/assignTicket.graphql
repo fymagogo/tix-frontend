@@ -1,0 +1,17 @@
+mutation AssignTicket($ticketId: ID!, $agentId: ID!) {
+  assignTicket(ticketId: $ticketId, agentId: $agentId) {
+    ticket {
+      id
+      status
+      assignedAgent {
+        id
+        name
+      }
+    }
+    errors {
+      field
+      message
+      code
+    }
+  }
+}

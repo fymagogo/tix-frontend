@@ -1,0 +1,24 @@
+mutation AddComment($ticketId: ID!, $body: String!) {
+  addComment(ticketId: $ticketId, body: $body) {
+    comment {
+      id
+      body
+      createdAt
+      author {
+        ... on Customer {
+          id
+          name
+        }
+        ... on Agent {
+          id
+          name
+        }
+      }
+    }
+    errors {
+      field
+      message
+      code
+    }
+  }
+}
