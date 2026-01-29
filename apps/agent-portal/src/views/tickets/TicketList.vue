@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
 import { useRouter } from 'vue-router'
-import { useQuery } from '@vue/apollo-composable'
+import { useQuery, useMutation } from '@vue/apollo-composable'
 import gql from 'graphql-tag'
 import { usePagination } from '@tix/graphql'
 import { useAuthStore } from '@/stores/auth'
@@ -39,11 +39,28 @@ const TICKETS_QUERY = gql`
   }
 `
 
+const ASSIGN_TICKET_MUTATION = gql`
+  mutation ClaimTicket($ticketId: ID!, $agentId: ID!) {
+    assignTicket(input: { ticketId: $ticketId, agentId: $agentId }) {
+      ticket {
+        id
+        status
+        assignedAgent {
+          id
+          name
+        }
+      }
+      errors
+    }
+  }
+`
+
 const router = useRouter()
 const auth = useAuthStore()
 
 const statusFilter = ref('')
-const assignedToMeFilter = ref(false)
+const assignedToMeFilter = ref(true)  // Default to showing only my tickets
+const unassignedFilter = ref(false)
 const searchQuery = ref('')
 const sortField = ref('CREATED_AT')
 const sortDirection = ref('DESC')
@@ -52,7 +69,7 @@ const { currentPage, paginationInput, totalPages, totalCount, setPageInfo, goToP
 
 const variables = computed(() => ({
   filter: {
-    status: statusFilter.value || undefined,
+    status: unassignedFilter.value ? 'NEW' : (statusFilter.value || undefined),
     assignedToMe: assignedToMeFilter.value || undefined,
     search: searchQuery.value || undefined,
   },
@@ -64,6 +81,7 @@ const variables = computed(() => ({
 }))
 
 const { result, loading, refetch } = useQuery(TICKETS_QUERY, variables)
+const { mutate: assignTicket, loading: claiming } = useMutation(ASSIGN_TICKET_MUTATION)
 
 const tickets = computed(() => result.value?.tickets?.items ?? [])
 const pageInfo = computed(() => result.value?.tickets?.pageInfo)
@@ -72,8 +90,16 @@ watch(pageInfo, (info) => {
   if (info) setPageInfo(info)
 })
 
-watch([statusFilter, assignedToMeFilter, searchQuery, sortField, sortDirection], () => {
+watch([statusFilter, assignedToMeFilter, unassignedFilter, searchQuery, sortField, sortDirection], () => {
   goToPage(1)
+})
+
+// Clear status filter when unassigned is selected
+watch(unassignedFilter, (val) => {
+  if (val) {
+    statusFilter.value = ''
+    assignedToMeFilter.value = false
+  }
 })
 
 const statusOptions = [
@@ -100,6 +126,22 @@ const selectedSort = computed({
     sortDirection.value = direction
   },
 })
+
+async function claimTicket(ticketId: string, event: Event) {
+  event.stopPropagation()
+  
+  if (!auth.user?.id) return
+  
+  try {
+    await assignTicket({
+      ticketId,
+      agentId: auth.user.id,
+    })
+    await refetch()
+  } catch (error) {
+    console.error('Failed to claim ticket:', error)
+  }
+}
 
 function viewTicket(id: string) {
   router.push(`/tickets/${id}`)
@@ -136,6 +178,7 @@ function formatDate(dateStr: string) {
           <Select
             v-model="statusFilter"
             :options="statusOptions"
+            :disabled="unassignedFilter"
           />
         </div>
         <div class="w-48">
@@ -146,8 +189,17 @@ function formatDate(dateStr: string) {
         </div>
         <label class="flex items-center gap-2 cursor-pointer">
           <input
+            v-model="unassignedFilter"
+            type="checkbox"
+            class="rounded border-gray-300 text-amber-600 focus:ring-amber-500"
+          />
+          <span class="text-sm text-gray-700">Unassigned only</span>
+        </label>
+        <label class="flex items-center gap-2 cursor-pointer">
+          <input
             v-model="assignedToMeFilter"
             type="checkbox"
+            :disabled="unassignedFilter"
             class="rounded border-gray-300 text-primary-600 focus:ring-primary-500"
           />
           <span class="text-sm text-gray-700">My tickets only</span>
@@ -193,6 +245,12 @@ function formatDate(dateStr: string) {
               >
                 Assigned to you
               </span>
+              <span
+                v-else-if="!ticket.assignedAgent"
+                class="text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full"
+              >
+                Unassigned
+              </span>
             </div>
             <h3 class="text-lg font-medium text-gray-900 truncate">
               {{ ticket.subject }}
@@ -205,9 +263,20 @@ function formatDate(dateStr: string) {
               </span>
             </div>
           </div>
-          <svg class="h-5 w-5 text-gray-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-          </svg>
+          <div class="flex items-center gap-2">
+            <Button
+              v-if="!ticket.assignedAgent"
+              size="sm"
+              variant="primary"
+              :loading="claiming"
+              @click="claimTicket(ticket.id, $event)"
+            >
+              Claim
+            </Button>
+            <svg class="h-5 w-5 text-gray-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+          </div>
         </div>
       </Card>
 
