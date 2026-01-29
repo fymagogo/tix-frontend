@@ -4,7 +4,7 @@ interface Props {
   padding?: boolean
 }
 
-const props = withDefaults(defineProps<Props>(), {
+withDefaults(defineProps<Props>(), {
   clickable: false,
   padding: true,
 })

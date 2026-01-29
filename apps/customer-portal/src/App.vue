@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { watch } from 'vue'
 import { RouterView } from 'vue-router'
 import { useQuery } from '@vue/apollo-composable'
 import gql from 'graphql-tag'
@@ -21,7 +20,7 @@ const ME_QUERY = gql`
 const auth = useAuthStore()
 
 // Fetch current user if we have a token but no user data
-const { result, onResult } = useQuery(ME_QUERY, null, {
+const { onResult } = useQuery(ME_QUERY, null, {
   enabled: auth.isAuthenticated && !auth.user,
 })
 

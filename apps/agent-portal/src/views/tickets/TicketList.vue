@@ -55,6 +55,19 @@ const ASSIGN_TICKET_MUTATION = gql`
   }
 `
 
+const AGENT_STATS_QUERY = gql`
+  query AgentStats {
+    agentStats {
+      assignedTickets
+      openTickets
+      closedTickets
+      closedThisWeek
+      closedThisMonth
+      averageResolutionTimeHours
+    }
+  }
+`
+
 const router = useRouter()
 const auth = useAuthStore()
 
@@ -82,9 +95,11 @@ const variables = computed(() => ({
 
 const { result, loading, refetch } = useQuery(TICKETS_QUERY, variables)
 const { mutate: assignTicket, loading: claiming } = useMutation(ASSIGN_TICKET_MUTATION)
+const { result: statsResult, loading: statsLoading } = useQuery(AGENT_STATS_QUERY)
 
 const tickets = computed(() => result.value?.tickets?.items ?? [])
 const pageInfo = computed(() => result.value?.tickets?.pageInfo)
+const agentStats = computed(() => statsResult.value?.agentStats)
 
 watch(pageInfo, (info) => {
   if (info) setPageInfo(info)
@@ -160,8 +175,30 @@ function formatDate(dateStr: string) {
   <div class="space-y-6">
     <!-- Header -->
     <div>
-      <h1 class="text-2xl font-bold text-gray-900">Tickets</h1>
-      <p class="text-gray-600">Manage and respond to support requests</p>
+      <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Tickets</h1>
+      <p class="text-gray-600 dark:text-gray-400">Manage and respond to support requests</p>
+    </div>
+
+    <!-- Agent Stats -->
+    <div v-if="agentStats && !statsLoading" class="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <Card class="text-center">
+        <p class="text-3xl font-bold text-primary-600 dark:text-primary-400">{{ agentStats.openTickets }}</p>
+        <p class="text-sm text-gray-600 dark:text-gray-400">Open Tickets</p>
+      </Card>
+      <Card class="text-center">
+        <p class="text-3xl font-bold text-blue-600 dark:text-blue-400">{{ agentStats.assignedTickets }}</p>
+        <p class="text-sm text-gray-600 dark:text-gray-400">Total Assigned</p>
+      </Card>
+      <Card class="text-center">
+        <p class="text-3xl font-bold text-green-600 dark:text-green-400">{{ agentStats.closedThisWeek }}</p>
+        <p class="text-sm text-gray-600 dark:text-gray-400">Closed This Week</p>
+      </Card>
+      <Card class="text-center">
+        <p class="text-3xl font-bold text-gray-600 dark:text-gray-400">
+          {{ agentStats.averageResolutionTimeHours ? `${agentStats.averageResolutionTimeHours.toFixed(1)}h` : 'N/A' }}
+        </p>
+        <p class="text-sm text-gray-600 dark:text-gray-400">Avg Resolution</p>
+      </Card>
     </div>
 
     <!-- Filters -->

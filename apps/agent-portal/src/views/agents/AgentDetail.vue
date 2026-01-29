@@ -3,7 +3,7 @@ import { ref, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { useQuery } from '@vue/apollo-composable'
 import gql from 'graphql-tag'
-import { Button, Card, Badge, Spinner, Alert } from '@tix/ui'
+import { Card, Badge, Spinner, Alert } from '@tix/ui'
 
 const AGENT_QUERY = gql`
   query Agent($id: ID!) {

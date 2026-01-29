@@ -133,7 +133,7 @@ const onSubmit = handleSubmit(async (values) => {
 
     <!-- Form -->
     <Card>
-      <form @submit="onSubmit" class="space-y-6">
+      <form class="space-y-6" @submit="onSubmit">
         <Alert v-if="serverError" type="error" dismissible @dismiss="serverError = ''">
           {{ serverError }}
         </Alert>

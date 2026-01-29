@@ -8,7 +8,7 @@ interface Props {
   required?: boolean
 }
 
-const props = withDefaults(defineProps<Props>(), {
+withDefaults(defineProps<Props>(), {
   rows: 4,
   disabled: false,
   required: false,

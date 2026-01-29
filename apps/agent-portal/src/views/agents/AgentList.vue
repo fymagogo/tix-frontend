@@ -160,7 +160,7 @@ function formatDate(dateStr: string) {
 
     <!-- Invite Modal -->
     <Modal :open="showInviteModal" title="Invite Agent" @close="showInviteModal = false">
-      <form @submit="onSubmit" class="space-y-4">
+      <form class="space-y-4" @submit="onSubmit">
         <p class="text-sm text-gray-600">
           Enter the details of the person you'd like to invite. They'll receive an email with instructions to set up their account.
         </p>

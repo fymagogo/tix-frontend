@@ -3,7 +3,7 @@ import { ref } from 'vue'
 import { useMutation } from '@vue/apollo-composable'
 import gql from 'graphql-tag'
 import { useToast } from 'vue-toastification'
-import { Button, Card, Alert, Spinner } from '@tix/ui'
+import { Button, Card, Alert } from '@tix/ui'
 import { extractErrorMessage } from '@tix/graphql'
 
 const EXPORT_CLOSED_TICKETS = gql`

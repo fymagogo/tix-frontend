@@ -179,7 +179,7 @@ const agents = computed(() => agentsResult.value?.agents ?? [])
 const ticketAttachments = computed(() => ticket.value?.attachments ?? [])
 
 const agentOptions = computed(() => 
-  agents.value.map((a: any) => ({ value: a.id, label: a.name }))
+  agents.value.map((a: { id: string; name: string }) => ({ value: a.id, label: a.name }))
 )
 
 // Available transitions based on current status
@@ -273,8 +273,9 @@ async function submitComment() {
       const error = response?.errors?.[0]
       commentError.value = error?.message || 'Failed to add comment'
     }
-  } catch (error: any) {
-    const message = error?.graphQLErrors?.[0]?.message || error?.message || 'An unexpected error occurred'
+  } catch (error: unknown) {
+    const err = error as { graphQLErrors?: Array<{ message: string }>; message?: string }
+    const message = err?.graphQLErrors?.[0]?.message || err?.message || 'An unexpected error occurred'
     commentError.value = message
   } finally {
     submitting.value = false
@@ -299,8 +300,9 @@ async function handleTransition(event: string) {
       const error = response?.errors?.[0]
       toast.error(error?.message || 'Failed to update ticket')
     }
-  } catch (error: any) {
-    const message = error?.graphQLErrors?.[0]?.message || error?.message || 'An unexpected error occurred'
+  } catch (error: unknown) {
+    const err = error as { graphQLErrors?: Array<{ message: string }>; message?: string }
+    const message = err?.graphQLErrors?.[0]?.message || err?.message || 'An unexpected error occurred'
     toast.error(message)
   } finally {
     transitioning.value = false
@@ -329,8 +331,9 @@ async function handleAssign() {
       const error = response?.errors?.[0]
       toast.error(error?.message || 'Failed to reassign ticket')
     }
-  } catch (error: any) {
-    const message = error?.graphQLErrors?.[0]?.message || error?.message || 'An unexpected error occurred'
+  } catch (error: unknown) {
+    const err = error as { graphQLErrors?: Array<{ message: string }>; message?: string }
+    const message = err?.graphQLErrors?.[0]?.message || err?.message || 'An unexpected error occurred'
     toast.error(message)
   } finally {
     assigning.value = false
