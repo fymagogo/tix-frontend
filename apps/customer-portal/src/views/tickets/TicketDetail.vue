@@ -220,16 +220,16 @@ function isImage(contentType: string): boolean {
     </div>
 
     <!-- Ticket details -->
-    <div v-else-if="ticket" class="space-y-6">
+    <div v-else-if="ticket" class="space-y-4 sm:space-y-6">
       <!-- Header -->
       <Card>
-        <div class="flex items-start justify-between mb-4">
+        <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 mb-4">
           <div>
-            <div class="flex items-center gap-2 mb-2">
+            <div class="flex flex-wrap items-center gap-2 mb-2">
               <span class="text-sm font-medium text-gray-500">#{{ ticket.ticketNumber }}</span>
               <Badge :variant="ticket.status" />
             </div>
-            <h1 class="text-2xl font-bold text-gray-900">{{ ticket.subject }}</h1>
+            <h1 class="text-xl sm:text-2xl font-bold text-gray-900">{{ ticket.subject }}</h1>
           </div>
         </div>
 
@@ -278,26 +278,26 @@ function isImage(contentType: string): boolean {
 
         <div v-else class="space-y-4 mb-6">
           <Card v-for="comment in comments" :key="comment.id">
-            <div class="flex items-start gap-4">
+            <div class="flex items-start gap-3 sm:gap-4">
               <div
                 :class="[
-                  'w-10 h-10 rounded-full flex items-center justify-center text-white font-medium',
+                  'w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center text-white text-sm sm:text-base font-medium shrink-0',
                   comment.author.__typename === 'Agent' ? 'bg-primary-600' : 'bg-gray-400'
                 ]"
               >
                 {{ comment.author.name.charAt(0).toUpperCase() }}
               </div>
-              <div class="flex-1">
-                <div class="flex items-center gap-2 mb-1">
+              <div class="flex-1 min-w-0">
+                <div class="flex flex-wrap items-center gap-1 sm:gap-2 mb-1">
                   <span class="font-medium text-gray-900">{{ comment.author.name }}</span>
                   <span v-if="comment.author.__typename === 'Agent'" class="text-xs text-primary-600 font-medium">
                     Agent
                   </span>
-                  <span class="text-sm text-gray-500">
+                  <span class="text-xs sm:text-sm text-gray-500 w-full sm:w-auto">
                     {{ formatDate(comment.createdAt) }}
                   </span>
                 </div>
-                <p class="text-gray-700 whitespace-pre-wrap">{{ comment.body }}</p>
+                <p class="text-gray-700 whitespace-pre-wrap break-words">{{ comment.body }}</p>
 
                 <!-- Comment attachments -->
                 <div v-if="comment.attachments?.length > 0" class="mt-3 flex flex-wrap gap-2">

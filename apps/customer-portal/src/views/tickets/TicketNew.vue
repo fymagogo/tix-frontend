@@ -123,17 +123,17 @@ const onSubmit = handleSubmit(async (values) => {
 <template>
   <div class="max-w-2xl mx-auto">
     <!-- Header -->
-    <div class="mb-8">
+    <div class="mb-6 sm:mb-8">
       <router-link to="/" class="text-sm text-primary-600 hover:text-primary-500 mb-4 inline-block">
         ← Back to tickets
       </router-link>
-      <h1 class="text-2xl font-bold text-gray-900">Create New Ticket</h1>
-      <p class="text-gray-600 mt-1">Describe your issue and we'll help you as soon as possible</p>
+      <h1 class="text-xl sm:text-2xl font-bold text-gray-900">Create New Ticket</h1>
+      <p class="text-sm sm:text-base text-gray-600 mt-1">Describe your issue and we'll help you as soon as possible</p>
     </div>
 
     <!-- Form -->
     <Card>
-      <form class="space-y-6" @submit="onSubmit">
+      <form class="space-y-4 sm:space-y-6" @submit="onSubmit">
         <Alert v-if="serverError" type="error" dismissible @dismiss="serverError = ''">
           {{ serverError }}
         </Alert>

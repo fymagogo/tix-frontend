@@ -364,7 +364,7 @@ function isImage(contentType: string): boolean {
 </script>
 
 <template>
-  <div class="max-w-4xl">
+  <div class="max-w-4xl mx-auto">
     <!-- Back link -->
     <router-link to="/" class="text-sm text-primary-600 hover:text-primary-500 mb-4 inline-block">
       ← Back to tickets
@@ -376,20 +376,20 @@ function isImage(contentType: string): boolean {
     </div>
 
     <!-- Ticket details -->
-    <div v-else-if="ticket" class="space-y-6">
+    <div v-else-if="ticket" class="space-y-4 sm:space-y-6">
       <!-- Header -->
       <Card>
-        <div class="flex items-start justify-between mb-4">
+        <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-4">
           <div>
-            <div class="flex items-center gap-2 mb-2">
+            <div class="flex flex-wrap items-center gap-2 mb-2">
               <span class="text-sm font-medium text-gray-500">#{{ ticket.ticketNumber }}</span>
               <Badge :variant="ticket.status" />
             </div>
-            <h1 class="text-2xl font-bold text-gray-900">{{ ticket.subject }}</h1>
+            <h1 class="text-xl sm:text-2xl font-bold text-gray-900">{{ ticket.subject }}</h1>
           </div>
 
           <!-- Actions -->
-          <div class="flex items-center gap-2">
+          <div class="flex flex-wrap items-center gap-2">
             <Button
               v-for="transition in availableTransitions"
               :key="transition.event"
@@ -427,17 +427,17 @@ function isImage(contentType: string): boolean {
         </div>
 
         <div class="mt-6 pt-4 border-t border-gray-200">
-          <div class="grid grid-cols-2 gap-4 text-sm">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 text-sm">
             <div>
               <span class="text-gray-500">Customer:</span>
               <span class="ml-2 text-gray-900">{{ ticket.customer.name }}</span>
-              <span class="text-gray-500">({{ ticket.customer.email }})</span>
+              <span class="text-gray-500 block sm:inline sm:ml-0">({{ ticket.customer.email }})</span>
             </div>
             <div>
               <span class="text-gray-500">Created:</span>
               <span class="ml-2 text-gray-900">{{ formatDate(ticket.createdAt) }}</span>
             </div>
-            <div class="flex items-center">
+            <div class="flex flex-wrap items-center">
               <span class="text-gray-500">Assigned to:</span>
               <span class="ml-2 text-gray-900">
                 {{ ticket.assignedAgent?.name || 'Unassigned' }}
@@ -480,12 +480,12 @@ function isImage(contentType: string): boolean {
           <div
             v-for="entry in history"
             :key="entry.id"
-            class="border-l-2 border-gray-200 pl-4 py-2"
+            class="border-l-2 border-gray-200 pl-3 sm:pl-4 py-2"
           >
-            <div class="flex items-center gap-2 text-sm">
+            <div class="flex flex-wrap items-center gap-1 sm:gap-2 text-sm">
               <span class="font-medium text-gray-900">{{ entry.event }}</span>
-              <span class="text-gray-500">•</span>
-              <span class="text-gray-500">{{ formatDate(entry.occurredAt) }}</span>
+              <span class="hidden sm:inline text-gray-500">•</span>
+              <span class="text-gray-500 w-full sm:w-auto">{{ formatDate(entry.occurredAt) }}</span>
               <span v-if="entry.actor" class="text-gray-500">
                 by {{ entry.actor.name }}
               </span>
@@ -506,17 +506,17 @@ function isImage(contentType: string): boolean {
 
         <div v-else class="space-y-4 mb-6">
           <Card v-for="comment in comments" :key="comment.id">
-            <div class="flex items-start gap-4">
+            <div class="flex items-start gap-3 sm:gap-4">
               <div
                 :class="[
-                  'w-10 h-10 rounded-full flex items-center justify-center text-white font-medium',
+                  'w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center text-white text-sm sm:text-base font-medium shrink-0',
                   comment.author.__typename === 'Agent' ? 'bg-primary-600' : 'bg-gray-400'
                 ]"
               >
                 {{ comment.author.name.charAt(0).toUpperCase() }}
               </div>
-              <div class="flex-1">
-                <div class="flex items-center gap-2 mb-1">
+              <div class="flex-1 min-w-0">
+                <div class="flex flex-wrap items-center gap-1 sm:gap-2 mb-1">
                   <span class="font-medium text-gray-900">{{ comment.author.name }}</span>
                   <span v-if="comment.author.__typename === 'Agent'" class="text-xs text-primary-600 font-medium">
                     Agent
@@ -524,11 +524,11 @@ function isImage(contentType: string): boolean {
                   <span v-else class="text-xs text-gray-500 font-medium">
                     Customer
                   </span>
-                  <span class="text-sm text-gray-500">
+                  <span class="text-xs sm:text-sm text-gray-500 w-full sm:w-auto">
                     {{ formatDate(comment.createdAt) }}
                   </span>
                 </div>
-                <p class="text-gray-700 whitespace-pre-wrap">{{ comment.body }}</p>
+                <p class="text-gray-700 whitespace-pre-wrap break-words">{{ comment.body }}</p>
 
                 <!-- Comment attachments -->
                 <div v-if="comment.attachments?.length > 0" class="mt-3 flex flex-wrap gap-2">

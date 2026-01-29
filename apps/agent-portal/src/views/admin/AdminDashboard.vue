@@ -15,10 +15,6 @@ const DASHBOARD_STATS_QUERY = gql`
         status
         count
       }
-      ticketsByPriority {
-        priority
-        count
-      }
       averageResolutionTimeHours
       ticketsCreatedToday
       ticketsClosedToday

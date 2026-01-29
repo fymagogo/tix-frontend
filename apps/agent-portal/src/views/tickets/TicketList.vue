@@ -175,72 +175,76 @@ function formatDate(dateStr: string) {
   <div class="space-y-6">
     <!-- Header -->
     <div>
-      <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Tickets</h1>
-      <p class="text-gray-600 dark:text-gray-400">Manage and respond to support requests</p>
+      <h1 class="text-2xl font-bold text-gray-900">Tickets</h1>
+      <p class="text-gray-600">Manage and respond to support requests</p>
     </div>
 
     <!-- Agent Stats -->
     <div v-if="agentStats && !statsLoading" class="grid grid-cols-2 md:grid-cols-4 gap-4">
       <Card class="text-center">
-        <p class="text-3xl font-bold text-primary-600 dark:text-primary-400">{{ agentStats.openTickets }}</p>
-        <p class="text-sm text-gray-600 dark:text-gray-400">Open Tickets</p>
+        <p class="text-3xl font-bold text-primary-600">{{ agentStats.openTickets }}</p>
+        <p class="text-sm text-gray-600">Open Tickets</p>
       </Card>
       <Card class="text-center">
-        <p class="text-3xl font-bold text-blue-600 dark:text-blue-400">{{ agentStats.assignedTickets }}</p>
-        <p class="text-sm text-gray-600 dark:text-gray-400">Total Assigned</p>
+        <p class="text-3xl font-bold text-blue-600">{{ agentStats.assignedTickets }}</p>
+        <p class="text-sm text-gray-600">Total Assigned</p>
       </Card>
       <Card class="text-center">
-        <p class="text-3xl font-bold text-green-600 dark:text-green-400">{{ agentStats.closedThisWeek }}</p>
-        <p class="text-sm text-gray-600 dark:text-gray-400">Closed This Week</p>
+        <p class="text-3xl font-bold text-green-600">{{ agentStats.closedThisWeek }}</p>
+        <p class="text-sm text-gray-600">Closed This Week</p>
       </Card>
       <Card class="text-center">
-        <p class="text-3xl font-bold text-gray-600 dark:text-gray-400">
+        <p class="text-3xl font-bold text-gray-600">
           {{ agentStats.averageResolutionTimeHours ? `${agentStats.averageResolutionTimeHours.toFixed(1)}h` : 'N/A' }}
         </p>
-        <p class="text-sm text-gray-600 dark:text-gray-400">Avg Resolution</p>
+        <p class="text-sm text-gray-600">Avg Resolution</p>
       </Card>
     </div>
 
     <!-- Filters -->
-    <Card :padding="false" class="p-4">
-      <div class="flex flex-wrap gap-4">
-        <div class="flex-1 min-w-[200px]">
+    <Card :padding="false" class="p-3 sm:p-4">
+      <div class="space-y-3 sm:space-y-0 sm:flex sm:flex-wrap sm:gap-4">
+        <div class="w-full sm:flex-1 sm:min-w-[200px]">
           <Input
             v-model="searchQuery"
             placeholder="Search tickets..."
             type="search"
           />
         </div>
-        <div class="w-40">
-          <Select
-            v-model="statusFilter"
-            :options="statusOptions"
-            :disabled="unassignedFilter"
-          />
+        <div class="flex gap-2 sm:gap-4">
+          <div class="flex-1 sm:w-40 sm:flex-none">
+            <Select
+              v-model="statusFilter"
+              :options="statusOptions"
+              :disabled="unassignedFilter"
+            />
+          </div>
+          <div class="flex-1 sm:w-48 sm:flex-none">
+            <Select
+              v-model="selectedSort"
+              :options="sortOptions"
+            />
+          </div>
         </div>
-        <div class="w-48">
-          <Select
-            v-model="selectedSort"
-            :options="sortOptions"
-          />
+        <div class="flex flex-wrap gap-x-4 gap-y-2">
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input
+              v-model="unassignedFilter"
+              type="checkbox"
+              class="rounded border-gray-300 text-amber-600 focus:ring-amber-500"
+            />
+            <span class="text-sm text-gray-700">Unassigned only</span>
+          </label>
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input
+              v-model="assignedToMeFilter"
+              type="checkbox"
+              :disabled="unassignedFilter"
+              class="rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+            />
+            <span class="text-sm text-gray-700">My tickets only</span>
+          </label>
         </div>
-        <label class="flex items-center gap-2 cursor-pointer">
-          <input
-            v-model="unassignedFilter"
-            type="checkbox"
-            class="rounded border-gray-300 text-amber-600 focus:ring-amber-500"
-          />
-          <span class="text-sm text-gray-700">Unassigned only</span>
-        </label>
-        <label class="flex items-center gap-2 cursor-pointer">
-          <input
-            v-model="assignedToMeFilter"
-            type="checkbox"
-            :disabled="unassignedFilter"
-            class="rounded border-gray-300 text-primary-600 focus:ring-primary-500"
-          />
-          <span class="text-sm text-gray-700">My tickets only</span>
-        </label>
       </div>
     </Card>
 
@@ -262,16 +266,16 @@ function formatDate(dateStr: string) {
     />
 
     <!-- Ticket list -->
-    <div v-else class="space-y-4">
+    <div v-else class="space-y-3 sm:space-y-4">
       <Card
         v-for="ticket in tickets"
         :key="ticket.id"
         clickable
         @click="viewTicket(ticket.id)"
       >
-        <div class="flex items-start justify-between">
+        <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
           <div class="flex-1 min-w-0">
-            <div class="flex items-center gap-2 mb-1">
+            <div class="flex flex-wrap items-center gap-2 mb-1">
               <span class="text-sm font-medium text-gray-500">
                 #{{ ticket.ticketNumber }}
               </span>
@@ -289,18 +293,18 @@ function formatDate(dateStr: string) {
                 Unassigned
               </span>
             </div>
-            <h3 class="text-lg font-medium text-gray-900 truncate">
+            <h3 class="text-base sm:text-lg font-medium text-gray-900 line-clamp-2 sm:truncate">
               {{ ticket.subject }}
             </h3>
-            <div class="text-sm text-gray-500 mt-1 flex flex-wrap gap-x-4">
-              <span>{{ ticket.customer.name }} ({{ ticket.customer.email }})</span>
+            <div class="text-sm text-gray-500 mt-1 flex flex-col sm:flex-row sm:flex-wrap gap-1 sm:gap-x-4">
+              <span class="truncate">{{ ticket.customer.name }} ({{ ticket.customer.email }})</span>
               <span>Created {{ formatDate(ticket.createdAt) }}</span>
               <span v-if="ticket.assignedAgent">
                 Agent: {{ ticket.assignedAgent.name }}
               </span>
             </div>
           </div>
-          <div class="flex items-center gap-2">
+          <div class="flex items-center justify-between sm:justify-end gap-2 pt-2 sm:pt-0 border-t sm:border-t-0 border-gray-100">
             <Button
               v-if="!ticket.assignedAgent"
               size="sm"

@@ -90,7 +90,7 @@ function formatDate(dateStr: string) {
 
     <!-- Filters -->
     <div class="flex items-center gap-4">
-      <div class="w-48">
+      <div class="flex-1 sm:flex-none sm:w-48">
         <Select
           v-model="statusFilter"
           :options="statusOptions"
@@ -118,22 +118,22 @@ function formatDate(dateStr: string) {
     </EmptyState>
 
     <!-- Ticket list -->
-    <div v-else class="space-y-4">
+    <div v-else class="space-y-3 sm:space-y-4">
       <Card
         v-for="ticket in tickets"
         :key="ticket.id"
         clickable
         @click="viewTicket(ticket.id)"
       >
-        <div class="flex items-start justify-between">
+        <div class="flex items-start justify-between gap-3">
           <div class="flex-1 min-w-0">
-            <div class="flex items-center gap-2 mb-1">
+            <div class="flex flex-wrap items-center gap-2 mb-1">
               <span class="text-sm font-medium text-gray-500">
                 #{{ ticket.ticketNumber }}
               </span>
               <Badge :variant="ticket.status" />
             </div>
-            <h3 class="text-lg font-medium text-gray-900 truncate">
+            <h3 class="text-base sm:text-lg font-medium text-gray-900 line-clamp-2 sm:truncate">
               {{ ticket.subject }}
             </h3>
             <p class="text-sm text-gray-500 mt-1">
@@ -143,7 +143,7 @@ function formatDate(dateStr: string) {
               </span>
             </p>
           </div>
-          <svg class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg class="h-5 w-5 text-gray-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
           </svg>
         </div>
