@@ -163,7 +163,10 @@ const { uploadFile } = useDirectUpload()
 
 const ticketId = computed(() => route.params.id as string)
 
-const { result, loading, refetch } = useQuery(TICKET_QUERY, { id: ticketId })
+// Poll every 10 seconds for new comments
+const { result, loading, refetch } = useQuery(TICKET_QUERY, { id: ticketId }, {
+  pollInterval: 10000,
+})
 const { result: agentsResult } = useQuery(AGENTS_QUERY)
 const { mutate: addComment } = useMutation(ADD_COMMENT)
 const { mutate: transitionTicket } = useMutation(TRANSITION_TICKET)
