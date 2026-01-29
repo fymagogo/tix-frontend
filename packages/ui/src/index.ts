@@ -11,6 +11,10 @@ export { default as Alert } from './components/Alert.vue'
 export { default as Spinner } from './components/Spinner.vue'
 export { default as EmptyState } from './components/EmptyState.vue'
 export { default as FileUpload } from './components/FileUpload.vue'
+export { default as DarkModeToggle } from './components/DarkModeToggle.vue'
+
+// Composables
+export { useDarkMode } from './composables/useDarkMode'
 
 // Types
 export type { UploadFile } from './components/FileUpload.vue'

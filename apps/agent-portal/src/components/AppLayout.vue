@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useRouter, useRoute } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
-import { Button } from '@tix/ui'
+import { Button, DarkModeToggle } from '@tix/ui'
 
 const router = useRouter()
 const route = useRoute()
@@ -18,13 +18,13 @@ function isActive(name: string) {
 </script>
 
 <template>
-  <div class="min-h-screen bg-gray-50">
+  <div class="min-h-screen bg-gray-50 dark:bg-gray-900">
     <!-- Sidebar -->
-    <aside class="fixed inset-y-0 left-0 w-64 bg-white shadow-sm border-r border-gray-200">
+    <aside class="fixed inset-y-0 left-0 w-64 bg-white dark:bg-gray-800 shadow-sm border-r border-gray-200 dark:border-gray-700">
       <!-- Logo -->
-      <div class="h-16 flex items-center px-6 border-b border-gray-200">
-        <span class="text-2xl font-bold text-primary-600">Tix</span>
-        <span class="ml-2 text-sm text-gray-500">Agent Portal</span>
+      <div class="h-16 flex items-center px-6 border-b border-gray-200 dark:border-gray-700">
+        <span class="text-2xl font-bold text-primary-600 dark:text-primary-400">Tix</span>
+        <span class="ml-2 text-sm text-gray-500 dark:text-gray-400">Agent Portal</span>
       </div>
 
       <!-- Navigation -->
@@ -35,8 +35,8 @@ function isActive(name: string) {
             :class="[
               'group flex items-center px-3 py-2 text-sm font-medium rounded-md',
               isActive('tickets')
-                ? 'bg-primary-50 text-primary-700'
-                : 'text-gray-700 hover:bg-gray-50'
+                ? 'bg-primary-50 dark:bg-primary-900/50 text-primary-700 dark:text-primary-300'
+                : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
             ]"
           >
             <svg class="mr-3 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -50,8 +50,8 @@ function isActive(name: string) {
             :class="[
               'group flex items-center px-3 py-2 text-sm font-medium rounded-md',
               isActive('agents')
-                ? 'bg-primary-50 text-primary-700'
-                : 'text-gray-700 hover:bg-gray-50'
+                ? 'bg-primary-50 dark:bg-primary-900/50 text-primary-700 dark:text-primary-300'
+                : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
             ]"
           >
             <svg class="mr-3 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -65,8 +65,8 @@ function isActive(name: string) {
             :class="[
               'group flex items-center px-3 py-2 text-sm font-medium rounded-md',
               isActive('export')
-                ? 'bg-primary-50 text-primary-700'
-                : 'text-gray-700 hover:bg-gray-50'
+                ? 'bg-primary-50 dark:bg-primary-900/50 text-primary-700 dark:text-primary-300'
+                : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
             ]"
           >
             <svg class="mr-3 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -74,32 +74,52 @@ function isActive(name: string) {
             </svg>
             Export
           </router-link>
+
+          <!-- Admin only -->
+          <router-link
+            v-if="auth.isAdmin"
+            to="/admin"
+            :class="[
+              'group flex items-center px-3 py-2 text-sm font-medium rounded-md',
+              isActive('admin')
+                ? 'bg-primary-50 dark:bg-primary-900/50 text-primary-700 dark:text-primary-300'
+                : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
+            ]"
+          >
+            <svg class="mr-3 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+            </svg>
+            Dashboard
+          </router-link>
         </div>
       </nav>
 
       <!-- User menu at bottom -->
-      <div class="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-200">
+      <div class="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-200 dark:border-gray-700">
         <div class="flex items-center justify-between">
           <div class="flex items-center">
             <div class="w-8 h-8 rounded-full bg-primary-600 flex items-center justify-center text-white font-medium">
               {{ auth.user?.name?.charAt(0)?.toUpperCase() || 'A' }}
             </div>
             <div class="ml-3">
-              <p class="text-sm font-medium text-gray-700">{{ auth.user?.name }}</p>
-              <p v-if="auth.isAdmin" class="text-xs text-primary-600">Admin</p>
+              <p class="text-sm font-medium text-gray-700 dark:text-gray-200">{{ auth.user?.name }}</p>
+              <p v-if="auth.isAdmin" class="text-xs text-primary-600 dark:text-primary-400">Admin</p>
             </div>
           </div>
-          <Button variant="secondary" size="sm" @click="handleSignOut">
-            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-            </svg>
-          </Button>
+          <div class="flex items-center gap-1">
+            <DarkModeToggle />
+            <Button variant="secondary" size="sm" @click="handleSignOut">
+              <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+              </svg>
+            </Button>
+          </div>
         </div>
       </div>
     </aside>
 
     <!-- Main content -->
-    <main class="ml-64 p-8">
+    <main class="ml-64 p-8 dark:bg-gray-900 min-h-screen">
       <slot />
     </main>
   </div>
