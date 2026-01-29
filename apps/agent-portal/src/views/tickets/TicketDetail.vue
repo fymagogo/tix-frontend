@@ -60,6 +60,10 @@ const TICKET_QUERY = gql`
           url
         }
       }
+      availableTransitions {
+        event
+        label
+      }
       history {
         id
         event
@@ -182,25 +186,12 @@ const agentOptions = computed(() =>
   agents.value.map((a: { id: string; name: string }) => ({ value: a.id, label: a.name }))
 )
 
-// Available transitions based on current status
+// Available transitions from backend
 const availableTransitions = computed(() => {
-  const status = ticket.value?.status
-  switch (status) {
-    case 'agent_assigned':
-      return [{ event: 'start_progress', label: 'Start Progress', variant: 'primary' as const }]
-    case 'in_progress':
-      return [
-        { event: 'put_on_hold', label: 'Put On Hold', variant: 'secondary' as const },
-        { event: 'close', label: 'Close Ticket', variant: 'danger' as const },
-      ]
-    case 'hold':
-      return [
-        { event: 'start_progress', label: 'Resume Progress', variant: 'primary' as const },
-        { event: 'close', label: 'Close Ticket', variant: 'danger' as const },
-      ]
-    default:
-      return []
-  }
+  return (ticket.value?.availableTransitions ?? []).map((t: { event: string; label: string }) => ({
+    ...t,
+    variant: t.event === 'close' ? 'danger' as const : 'primary' as const
+  }))
 })
 
 const newComment = ref('')
