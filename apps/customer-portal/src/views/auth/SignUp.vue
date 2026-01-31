@@ -19,7 +19,6 @@ const SIGN_UP = gql`
         email
         name
       }
-      token
       errors {
         field
         message
@@ -73,8 +72,8 @@ const onSubmit = handleSubmit(async (values) => {
 
     const response = result?.data?.signUp
 
-    if (response?.token && response?.customer) {
-      auth.setAuth(response.token, response.customer)
+    if (response?.customer) {
+      auth.setUser(response.customer)
       toast.success('Account created successfully!')
       router.push('/')
     } else {

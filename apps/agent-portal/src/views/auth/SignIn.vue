@@ -22,7 +22,6 @@ const SIGN_IN = gql`
           isAdmin
         }
       }
-      token
       errors {
         field
         message
@@ -69,8 +68,8 @@ const onSubmit = handleSubmit(async (values) => {
 
     const response = result?.data?.signIn
 
-    if (response?.token && response?.user) {
-      auth.setAuth(response.token, response.user)
+    if (response?.user) {
+      auth.setUser(response.user)
       toast.success('Welcome back!')
       
       const redirect = route.query.redirect as string
