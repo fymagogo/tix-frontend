@@ -126,6 +126,13 @@ export const useAuthStore = defineStore('auth', () => {
     user.value = agent
   }
 
+  // Clear local state without calling the server (used for accept-invite flow)
+  async function clearLocalState() {
+    user.value = null
+    isInitialized.value = false
+    await apolloClient.clearStore()
+  }
+
   // Listen for session expired events from Apollo error link
   if (typeof window !== 'undefined') {
     window.addEventListener('auth:session-expired', () => {
@@ -144,5 +151,6 @@ export const useAuthStore = defineStore('auth', () => {
     setUser,
     signOut,
     hydrateUser,
+    clearLocalState,
   }
 })

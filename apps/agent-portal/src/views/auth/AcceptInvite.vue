@@ -1,12 +1,11 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
-import { useRouter, useRoute } from 'vue-router'
+import { ref, computed, onMounted } from 'vue'
+import { useRoute } from 'vue-router'
 import { useMutation } from '@vue/apollo-composable'
 import { useForm } from 'vee-validate'
 import { toTypedSchema } from '@vee-validate/zod'
 import { z } from 'zod'
 import gql from 'graphql-tag'
-import { useToast } from 'vue-toastification'
 import { useAuthStore } from '@/stores/auth'
 import { Button, Input, Alert } from '@tix/ui'
 import { extractErrorMessage } from '@tix/graphql'
@@ -20,7 +19,6 @@ const ACCEPT_INVITE = gql`
         name
         isAdmin
       }
-      token
       errors {
         field
         message
@@ -30,12 +28,16 @@ const ACCEPT_INVITE = gql`
   }
 `
 
-const router = useRouter()
 const route = useRoute()
-const toast = useToast()
 const auth = useAuthStore()
 
 const invitationToken = computed(() => route.query.token as string)
+
+// Clear local auth state when visiting accept-invite page
+// The server will handle setting new cookies on successful accept
+onMounted(async () => {
+  await auth.clearLocalState()
+})
 
 const schema = toTypedSchema(
   z.object({
@@ -77,10 +79,12 @@ const onSubmit = handleSubmit(async (values) => {
 
     const response = result?.data?.acceptInvite
 
-    if (response?.token && response?.agent) {
-      auth.setAuth(response.token, response.agent)
-      toast.success('Welcome to the team!')
-      router.push('/')
+    if (response?.agent) {
+      // Cookie is set by the server
+      // Store message for after reload
+      sessionStorage.setItem('tix:welcomeMessage', 'Welcome to the team!')
+      // Force a full page reload to ensure clean state with new cookies
+      window.location.href = '/'
     } else {
       const error = response?.errors?.[0]
       serverError.value = error?.message || 'Failed to accept invitation'

@@ -86,7 +86,8 @@ router.beforeEach(async (to, _from, next) => {
     next({ name: 'signin', query: { redirect: to.fullPath } })
   } else if (to.meta.requiresAdmin && !auth.user?.isAdmin) {
     next({ name: 'tickets' })
-  } else if (to.meta.guest && auth.isAuthenticated) {
+  } else if (to.meta.guest && auth.isAuthenticated && to.name !== 'accept-invite') {
+    // Allow accept-invite even when authenticated (user may be accepting invite for a different account)
     next({ name: 'tickets' })
   } else {
     next()

@@ -17,6 +17,7 @@ const AGENTS_QUERY = gql`
       email
       name
       isAdmin
+      invitationPending
       createdAt
     }
   }
@@ -144,13 +145,14 @@ function formatDate(dateStr: string) {
             <div class="flex-1 min-w-0">
               <div class="flex items-center gap-2">
                 <h3 class="font-medium text-gray-900 truncate">
-                  {{ agent.name || 'Pending Invite' }}
+                  {{ agent.name || agent.email }}
                 </h3>
                 <Badge v-if="agent.isAdmin" variant="default">Admin</Badge>
+                <Badge v-if="agent.invitationPending" variant="secondary">Pending</Badge>
               </div>
               <p class="text-sm text-gray-500 truncate">{{ agent.email }}</p>
               <p class="text-xs text-gray-400 mt-1">
-                Joined {{ formatDate(agent.createdAt) }}
+                {{ agent.invitationPending ? 'Invited' : 'Joined' }} {{ formatDate(agent.createdAt) }}
               </p>
             </div>
           </div>

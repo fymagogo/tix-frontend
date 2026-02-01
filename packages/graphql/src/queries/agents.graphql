@@ -4,6 +4,7 @@ query Agents {
     email
     name
     isAdmin
+    invitationPending
     createdAt
   }
 }
