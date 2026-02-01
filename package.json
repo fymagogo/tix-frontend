@@ -10,7 +10,7 @@
     "codegen": "pnpm --filter @tix/graphql codegen",
     "lint": "eslint . --ext .vue,.ts,.tsx",
     "lint:fix": "eslint . --ext .vue,.ts,.tsx --fix",
-    "typecheck": "vue-tsc --noEmit",
+    "typecheck": "pnpm --filter customer-portal typecheck && pnpm --filter agent-portal typecheck",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",

@@ -20,10 +20,6 @@
       "@tix/graphql": ["./packages/graphql/src"]
     }
   },
-  "references": [
-    { "path": "./apps/customer-portal" },
-    { "path": "./apps/agent-portal" },
-    { "path": "./packages/ui" },
-    { "path": "./packages/graphql" }
-  ]
+  "include": [],
+  "exclude": ["node_modules", "**/dist/**"]
 }
