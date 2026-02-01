@@ -1,8 +1,11 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
-import { apolloClient } from '@tix/graphql'
+import { apolloClient, setUserType } from '@tix/graphql'
 import type { Agent } from '@tix/graphql'
 import gql from 'graphql-tag'
+
+// Set the user type for this app
+setUserType('agent')
 
 const ME_QUERY = gql`
   query Me {
@@ -19,9 +22,31 @@ const ME_QUERY = gql`
 `
 
 const SIGN_OUT_MUTATION = gql`
-  mutation SignOut {
-    signOut {
+  mutation SignOut($userType: String!) {
+    signOut(userType: $userType) {
       success
+      errors {
+        field
+        message
+        code
+      }
+    }
+  }
+`
+
+const REFRESH_TOKEN_MUTATION = gql`
+  mutation RefreshToken($userType: String!) {
+    refreshToken(userType: $userType) {
+      success
+      user {
+        ... on Agent {
+          id
+          name
+          email
+          isAdmin
+          __typename
+        }
+      }
       errors {
         field
         message
@@ -53,6 +78,20 @@ export const useAuthStore = defineStore('auth', () => {
         user.value = meUser as Agent
         return true
       }
+      
+      // me returned null - try refreshing the token
+      // (access token may be expired but refresh token still valid)
+      const refreshResult = await apolloClient.mutate({
+        mutation: REFRESH_TOKEN_MUTATION,
+        variables: { userType: 'agent' },
+      })
+      
+      const refreshData = refreshResult.data?.refreshToken
+      if (refreshData?.success && refreshData?.user?.__typename === 'Agent') {
+        user.value = refreshData.user as Agent
+        return true
+      }
+      
       user.value = null
       return false
     } catch {
@@ -72,7 +111,10 @@ export const useAuthStore = defineStore('auth', () => {
 
   async function signOut() {
     try {
-      await apolloClient.mutate({ mutation: SIGN_OUT_MUTATION })
+      await apolloClient.mutate({
+        mutation: SIGN_OUT_MUTATION,
+        variables: { userType: 'agent' },
+      })
     } catch {
       // Continue with local cleanup even if mutation fails
     }

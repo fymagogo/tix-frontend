@@ -1,5 +1,5 @@
 // Apollo Client
-export { apolloClient, createApolloClient } from './apollo-client'
+export { apolloClient, createApolloClient, setUserType, getUserType } from './apollo-client'
 
 // Types
 export * from './types'

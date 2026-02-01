@@ -14,9 +14,20 @@ const httpLink = createHttpLink({
   credentials: 'include', // Send cookies with requests
 })
 
+// User type is set by the app (agent-portal or customer-portal)
+let currentUserType: 'agent' | 'customer' = 'customer'
+
+export function setUserType(userType: 'agent' | 'customer') {
+  currentUserType = userType
+}
+
+export function getUserType() {
+  return currentUserType
+}
+
 const REFRESH_TOKEN_MUTATION = gql`
-  mutation RefreshToken {
-    refreshToken {
+  mutation RefreshToken($userType: String!) {
+    refreshToken(userType: $userType) {
       success
       user {
         ... on Customer {
@@ -72,7 +83,10 @@ const errorLink = onError(({ graphQLErrors, operation, forward }) => {
 
         return fromPromise(
           apolloClient
-            .mutate({ mutation: REFRESH_TOKEN_MUTATION })
+            .mutate({
+              mutation: REFRESH_TOKEN_MUTATION,
+              variables: { userType: currentUserType },
+            })
             .then((result) => {
               const refreshResult = result.data?.refreshToken
               if (refreshResult?.success) {
