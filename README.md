@@ -13,6 +13,16 @@ Vue 3 monorepo containing two SPAs (Customer Portal, Agent Portal) with shared p
 - **Form Validation:** VeeValidate + Zod
 - **Notifications:** Vue Toastification
 
+## Prerequisites
+
+Before you begin, ensure you have the following installed:
+
+| Dependency | Version | Installation |
+|------------|---------|--------------|
+| Node.js | 20+ | [Node.js Downloads](https://nodejs.org/en/download/) or [nvm](https://github.com/nvm-sh/nvm#installing-and-updating) |
+| pnpm | 8+ | [pnpm Installation](https://pnpm.io/installation) or `npm install -g pnpm` |
+| Tix API | - | See [tix-api README](../tix-api/README.md) - must be running on port 3000 |
+
 ## Project Structure
 
 ```
@@ -29,12 +39,6 @@ tix-frontend/
 ```
 
 ## Getting Started
-
-### Prerequisites
-
-- Node.js 20+
-- pnpm 8+
-- Running Tix API on port 3000
 
 ### Installation
 
