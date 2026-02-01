@@ -6,6 +6,7 @@ import {
   Observable,
   fromPromise,
 } from '@apollo/client/core'
+import { setContext } from '@apollo/client/link/context'
 import { onError } from '@apollo/client/link/error'
 import gql from 'graphql-tag'
 
@@ -24,6 +25,16 @@ export function setUserType(userType: 'agent' | 'customer') {
 export function getUserType() {
   return currentUserType
 }
+
+// Add X-User-Type header to all requests so the backend knows which cookie to check
+const authLink = setContext((_, { headers }) => {
+  return {
+    headers: {
+      ...headers,
+      'X-User-Type': currentUserType,
+    },
+  }
+})
 
 const REFRESH_TOKEN_MUTATION = gql`
   mutation RefreshToken($userType: String!) {
@@ -138,7 +149,7 @@ const cache = new InMemoryCache({
 })
 
 export const apolloClient = new ApolloClient({
-  link: ApolloLink.from([errorLink, httpLink]),
+  link: ApolloLink.from([errorLink, authLink, httpLink]),
   cache,
   defaultOptions: {
     watchQuery: {
