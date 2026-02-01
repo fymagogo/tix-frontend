@@ -1,13 +1,27 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "composite": true,
     "baseUrl": ".",
+    "types": ["vite/client"],
     "paths": {
       "@/*": ["./src/*"],
       "@tix/ui": ["../../packages/ui/src"],
       "@tix/graphql": ["../../packages/graphql/src"]
     }
   },
-  "include": ["src/**/*.ts", "src/**/*.vue"]
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.vue",
+    "../../packages/ui/src/**/*.ts",
+    "../../packages/ui/src/**/*.vue",
+    "../../packages/graphql/src/**/*.ts"
+  ],
+  "exclude": [
+    "src/**/__tests__/**",
+    "src/**/*.spec.ts",
+    "src/**/*.test.ts",
+    "../../packages/**/__tests__/**",
+    "../../packages/**/*.spec.ts",
+    "../../packages/**/*.test.ts"
+  ]
 }

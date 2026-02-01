@@ -1,5 +1,5 @@
 <script setup lang="ts">
-type BadgeVariant = 'new' | 'agent_assigned' | 'in_progress' | 'hold' | 'closed' | 'default'
+type BadgeVariant = 'new' | 'agent_assigned' | 'in_progress' | 'hold' | 'closed' | 'default' | 'secondary'
 
 interface Props {
   variant?: BadgeVariant
@@ -16,6 +16,7 @@ const variantClasses: Record<BadgeVariant, string> = {
   hold: 'bg-orange-100 text-orange-800',
   closed: 'bg-green-100 text-green-800',
   default: 'bg-gray-100 text-gray-800',
+  secondary: 'bg-gray-200 text-gray-600',
 }
 
 const labels: Record<BadgeVariant, string> = {
@@ -25,6 +26,7 @@ const labels: Record<BadgeVariant, string> = {
   hold: 'On Hold',
   closed: 'Closed',
   default: '',
+  secondary: '',
 }
 </script>
 

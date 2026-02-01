@@ -1,7 +1,7 @@
 import { createApp, provide, h } from 'vue'
 import { createPinia } from 'pinia'
 import { DefaultApolloClient } from '@vue/apollo-composable'
-import Toast, { type PluginOptions } from 'vue-toastification'
+import Toast, { type PluginOptions, POSITION } from 'vue-toastification'
 import 'vue-toastification/dist/index.css'
 
 import App from './App.vue'
@@ -10,7 +10,7 @@ import { apolloClient } from '@tix/graphql'
 import './assets/main.css'
 
 const toastOptions: PluginOptions = {
-  position: 'top-right',
+  position: POSITION.TOP_RIGHT,
   timeout: 5000,
   closeOnClick: true,
   pauseOnFocusLoss: true,
