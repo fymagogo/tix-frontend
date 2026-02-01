@@ -9,9 +9,5 @@
       "@tix/graphql": ["../../packages/graphql/src"]
     }
   },
-  "include": ["src/**/*.ts", "src/**/*.vue"],
-  "references": [
-    { "path": "../../packages/ui" },
-    { "path": "../../packages/graphql" }
-  ]
+  "include": ["src/**/*.ts", "src/**/*.vue"]
 }
