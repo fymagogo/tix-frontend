@@ -78,8 +78,9 @@ const errorLink = onError(({ graphQLErrors, operation, forward }) => {
     for (const err of graphQLErrors) {
       // Check for authentication error
       if (
+        err.extensions?.code === 'UNAUTHENTICATED' ||
         err.extensions?.code === 'AUTHENTICATION_ERROR' ||
-        err.message.toLowerCase().includes('not authenticated')
+        err.message.toLowerCase().includes('authentication required')
       ) {
         if (isRefreshing) {
           // Queue this request while refresh is in progress
