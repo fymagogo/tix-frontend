@@ -151,4 +151,4 @@ The frontend expects the Tix API to be running at `http://localhost:3000` with:
 
 - GraphQL endpoint at `/graphql`
 - CORS configured for frontend origins (5173, 5174)
-- JWT authentication via Authorization header
+- Cookie-based JWT authentication (HttpOnly cookies with access/refresh tokens)
