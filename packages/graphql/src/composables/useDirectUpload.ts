@@ -130,11 +130,14 @@ export function useDirectUpload() {
 
       xhr.open('PUT', url)
       
-      // Set headers
+      // Set headers from presigned URL (includes Content-MD5, Content-Type)
       for (const [key, value] of Object.entries(headers)) {
         xhr.setRequestHeader(key, value)
       }
-      xhr.setRequestHeader('Content-Type', file.type)
+      // Only set Content-Type if not already in headers
+      if (!headers['Content-Type']) {
+        xhr.setRequestHeader('Content-Type', file.type)
+      }
 
       xhr.send(file)
     })
