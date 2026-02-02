@@ -152,3 +152,8 @@ The frontend expects the Tix API to be running at `http://localhost:3000` with:
 - GraphQL endpoint at `/graphql`
 - CORS configured for frontend origins (5173, 5174)
 - Cookie-based JWT authentication (HttpOnly cookies with access/refresh tokens)
+
+## Email Notes
+
+- **Development:** Emails are captured by Letter Opener and open in browser (no actual sending)
+- **Production:** Uses SendGrid free tier with a personal email as sender proxy. **Check your spam folder** for agent invitation emails, password reset links, and ticket notifications.
